@@ -7,6 +7,8 @@ import javax.ws.rs.core.MediaType;
 
 //For JSON
 import com.google.gson.*;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource;
 
 //For XML
 import org.jsoup.*;
@@ -71,5 +73,18 @@ public class ItemService
 		String itemID = doc.select("itemID").text();
 		String output = itemObj.deleteItem(itemID);
 		return output;
+	}
+	
+	
+	//Test inter-service communications
+	@GET
+	@Path("/intercomms/{name}")
+	@Produces(MediaType.TEXT_HTML)
+	public String intercomms(@PathParam("name") String name)
+	{
+		Client c = Client.create();
+		WebResource resource = c.resource("http://127.0.0.1:8080/Lab5Rest/myService/Hello/" + name);
+		String output = resource.get(String.class);
+		return "From lab5-server-service: " + output;
 	}
 }
